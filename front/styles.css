@@ -8,7 +8,7 @@
 /* Define estilos gerais para o corpo da página */
 body {
   font-family: Arial, sans-serif; /* Define a fonte principal */
-  background-color: #f4f4f9; /* Define uma cor de fundo suave */
+  background-color: #8724b1; /* Define uma cor de fundo suave */
   color: #333; /* Define a cor padrão do texto */
   min-height: 100vh; /* Garante que o body ocupe toda a altura da tela */
   position: relative; /* Define o contexto de posicionamento relativo para o rodapé */
@@ -17,7 +17,7 @@ body {
 
 /* Estilo do cabeçalho */
 header {
-  background-color: #4CAF50; /* Define a cor de fundo do cabeçalho */
+  background-color: #8950cb; /* Define a cor de fundo do cabeçalho */
   padding: 20px; /* Espaçamento interno */
   text-align: center; /* Centraliza o texto */
   color: white; /* Define a cor do texto no cabeçalho */
@@ -79,7 +79,7 @@ main section {
 
 /* Seletor de ID para a seção 'home' */
 #home {
-  background-color: #afd8de; /* Cor de fundo para destacar a seção 'home' */
+  background-color: #b98bdf; /* Cor de fundo para destacar a seção 'home' */
   padding: 20px; /* Espaçamento interno */
   border-radius: 8px; /* Bordas arredondadas */
   text-align: center; /* Centraliza o texto */
@@ -87,7 +87,7 @@ main section {
 
 /* Estilo específico para o título dentro da seção 'home' */
 #home h2 {
-  color: #00796b; /* Cor específica para o título da seção 'home' */
+  color: #41046f; /* Cor específica para o título da seção 'home' */
 }
 
 /* Estilo do contêiner que agrupa os eventos */
