@@ -1,5 +1,4 @@
-let organizadores = [];
-let nextId = 0; // Variável para controlar o próximo ID
+const connect = require("../controllers/organizadorController");
 
 module.exports = class organizadorController {
   static async createOrganizador(req, res) {
@@ -20,101 +19,120 @@ module.exports = class organizadorController {
         });
     }
 
-    const existingOrganizador = organizadores.find(
-      (organizador) => organizador.email === email
+    //Verifica se já existe um usuario com o mesmo email
+    const existinOrganizador = organizadores.find((organizador) => organizador.email === email);
+    if (existingOrganizador){
+      return res.status(400).json({error: "Email ja cadastrado"});
+    }
+
+    else{
+      // Construção da query INSERT
+      const query = `INSERT INTO organizador (telefone, password, email, name) VALUES('${telefone}', '${password}', '${email}', '${nome}')`;
+      //Executando a query criada
+      try{
+        connect.query(query, function(err){
+          if(err){
+            console.log(err)
+            console.log(err.code)
+            if(err.code === 'ER_DUP_ENTRY'){
+              return res.status(400).json({error:"O email ja esta vinculado a outro usuario",});
+            }else{
+              return res.status(500).json({ error: "Erro interno do servidor", });
+            }
+    }else{
+      return res.status(201).json({ message: "Usuário criado com sucesso" });
+    }
+  });
+
+}catch (error) {
+  console.error(error);
+  res.status(500).json({error:"Erro interno do servidor"})
+}
+
+// Cria e adiciona novo usuário
+
+  }
+}
+  
+  static postLogin(req, res) {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ error: "Email e senha são obrigatórios" });
+    }
+
+    const user = users.find(
+      (user) => user.email === email && user.password === password
     );
-    if (existingOrganizador) {
-      return res.status(400).json({ error: "Email já cadastrado" });
-    }
-
-    // Gera um novo organizador com o próximo ID disponível
-    const newOrganizador = { id: nextId++, nome, email, senha, telefone };
-    organizadores.push(newOrganizador);
-
-    return res
-      .status(201)
-      .json({
-        message: "Organizador criado com sucesso",
-        organizador: newOrganizador,
-      });
-  }
-
-  static async getAllOrganizadores(req, res) {
-    return res
-      .status(200)
-      .json({ message: "Obtendo todos os organizadores", organizadores });
-  }
-
-  static async getOrganizadorById(req, res) {
-    const organizadorId = parseInt(req.params.id);
-    const organizador = organizadores.find((org) => org.id === organizadorId);
-
-    if (!organizador) {
-      return res.status(404).json({ error: "Organizador não encontrado" });
+    if (!user) {
+      return res.status(401).json({ error: "Credenciais inválidas" });
     }
 
     return res
       .status(200)
-      .json({ message: "Organizador encontrado", organizador });
+      .json({ message: "Login realizado com sucesso", user });
   }
 
-  static async updateOrganizador(req, res) {
-    const { id, nome, email, senha, telefone } = req.body;
+  static async getAllUsers(req, res) {
+    return res.status(200).json({ message: "Obtendo todos os usuários" });
+  }
 
-    if (!id || !nome || !email || !senha || !telefone) {
+  static async getUserById(req, res) {
+    const userId = req.params.telefone;
+    const user = users.find((user) => user.cpf === userId);
+
+    if (!user) {
+      return res.status(404).json({ error: "Usuário não encontrado" });
+    }
+
+    return res.status(200).json({ message: "Usuário encontrado", user });
+  }
+
+  static async updateUser(req, res) {
+    // Desestrutura os dados enviados no corpo da requisição (telefone, email, senha e nome)
+    const { cpf, email, password, name } = req.body;
+
+    // Verifica se todos os campos obrigatórios foram preenchidos
+    if (!telefone || !email || !password || !name) {
+      // Se algum campo estiver faltando, retorna uma resposta de erro 400 (Bad Request)
       return res
         .status(400)
         .json({ error: "Todos os campos devem ser preenchidos" });
     }
 
-    const organizadorIndex = organizadores.findIndex(
-      (org) => org.id === parseInt(id)
-    );
+    // Procura o índice do usuário no array 'users' com base no telefone
+    const userIndex = users.findIndex((user) => user.telefone === telefone);
 
-    if (organizadorIndex === -1) {
-      return res.status(404).json({ error: "Organizador não encontrado" });
+    // Se o usuário não for encontrado (userIndex será -1), retorna uma resposta de erro 404 (Not Found)
+    if (userIndex === -1) {
+      return res.status(404).json({ error: "Usuário não encontrado" });
     }
 
-    const existingOrganizador = organizadores.find(
-      (organizador) => organizador.email === email
-    );
-    if (existingOrganizador && existingOrganizador.id != id) {
-      return res
-        .status(400)
-        .json({ error: "Email já cadastrado por outro usuário" });
-    }
+    // Atualiza os dados do usuário no array 'users' com os novos valores recebidos no corpo da requisição
+    users[userIndex] = { telefone, email, password, name };
 
-    organizadores[organizadorIndex] = {
-      id: parseInt(id),
-      nome,
-      email,
-      senha,
-      telefone,
-    };
-
-    return res
-      .status(200)
-      .json({
-        message: "Organizador atualizado com sucesso",
-        organizador: organizadores[organizadorIndex],
-      });
+    // Retorna uma resposta de sucesso 200 (OK) com uma mensagem informando que o usuário foi atualizado
+    return res.status(200).json({
+      message: "Usuário atualizado com sucesso",
+      user: users[userIndex],
+    });
   }
+  static async deleteUser(req, res) {
+    // Obtém o parâmetro 'id' da requisição, que é o CPF do usuário a ser deletado
+    const userId = req.params.telefone;
 
-  static async deleteOrganizador(req, res) {
-    const organizadorId = parseInt(req.params.id);
+    // Procura o índice do usuário no array 'users' com base no CPF
+    const userIndex = users.findIndex((user) => user.telefone === userId);
 
-    const organizadorIndex = organizadores.findIndex(
-      (org) => org.id === organizadorId
-    );
-
-    if (organizadorIndex === -1) {
-      return res.status(404).json({ error: "Organizador não encontrado" });
+    // Se o usuário não for encontrado (userIndex será -1), retorna uma resposta de erro 404 (Not Found)
+    if (userIndex === -1) {
+      return res.status(404).json({ error: "Usuário não encontrado" });
     }
 
-    organizadores.splice(organizadorIndex, 1);
+    // Remove o usuário do array 'users' usando o método 'splice', que deleta o item no índice encontrado
+    users.splice(userIndex, 1);
 
-    return res
-      .status(200)
-      .json({ message: "Organizador excluído com sucesso" });
+    // Retorna uma resposta de sucesso 200 (OK) com uma mensagem informando que o usuário foi excluído
+    return res.status(200).json({ message: "Usuário excluído com sucesso" });
   }
-};
+}

@@ -50,7 +50,7 @@ document
 
         //exibe um alerta para o usuário final (front) com o nome do usuário que acabou de ser
         //cadastrado
-        alert("Usuario cadastrado com sucesso! " + data.user.name);
+        // alert("Usuario cadastrado com sucesso! " + data.user.name);
 
         //Exibe o log no terminal
         console.log("Usuario criado: ", data.user);
