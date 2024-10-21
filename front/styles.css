@@ -8,7 +8,7 @@
 /* Define estilos gerais para o corpo da página */
 body {
   font-family: Arial, sans-serif; /* Define a fonte principal */
-  background-color: #8724b1; /* Define uma cor de fundo suave */
+  background-color: #a85ec7; /* Define uma cor de fundo suave */
   color: #333; /* Define a cor padrão do texto */
   min-height: 100vh; /* Garante que o body ocupe toda a altura da tela */
   position: relative; /* Define o contexto de posicionamento relativo para o rodapé */
@@ -17,7 +17,7 @@ body {
 
 /* Estilo do cabeçalho */
 header {
-  background-color: #8950cb; /* Define a cor de fundo do cabeçalho */
+  background-color: #9f4bc3; /* Define a cor de fundo do cabeçalho */
   padding: 20px; /* Espaçamento interno */
   text-align: center; /* Centraliza o texto */
   color: white; /* Define a cor do texto no cabeçalho */
@@ -113,4 +113,14 @@ footer {
   width: 100%; /* Faz com que o rodapé ocupe toda a largura */
   position: absolute; /* Posiciona o rodapé de forma absoluta */
   bottom: 0; /* Posiciona o rodapé na parte inferior da página */
+}
+
+#user-list{
+  background-color: #b13ac6;
+  margin-bottom: 20px;
+  padding: 7px;
+  color: #530c53;
+  border-radius: 40px;
+  font-weight: bold;
+  text-align: center;
 }
