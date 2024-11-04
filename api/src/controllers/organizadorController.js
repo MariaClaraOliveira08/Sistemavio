@@ -14,8 +14,6 @@ module.exports = class organizadorController {
     }
   }
 
-
-
   //get
   static async getAllOrganizadores(req, res) {
       const query = `SELECT * FROM organizador`; //busca e mostra a tabela usuario
@@ -33,20 +31,18 @@ module.exports = class organizadorController {
         console.error("Erro ao executar consulta:", error);
         return res.status(500).json({ error: "Erro interno no servidor" });
       }
-  
-    
   }
 
 
   //update
   static async updateOrganizador(req, res) {
-    const { id, nome, email, senha, telefone } = req.body;
+    const { nome, email, senha, telefone } = req.body;
 
-    if (!id || !nome || !email || !senha || !telefone) {
+    if (!nome || !email || !senha || !telefone) {
       return res.status(400).json({ error: "Todos os campos devem ser preenchidos" });
     }
     const query = `UPDATE organizador SET nome=?,email=?,senha=?,telefone=? WHERE id_organizador = ?`;
-    const values = [nome, email, senha, telefone, id];
+    const values = [nome, email, senha, telefone];
 
     try {
       connect.query(query, values, function (err, results) {

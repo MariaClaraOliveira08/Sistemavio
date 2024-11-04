@@ -1,23 +1,25 @@
 //Chamada da função "createUser" para associação ao evento de envio de formulário
-document.getElementById("formulario-registro").addEventListener("submit", createUser); //metodo post
+document.getElementById("formulario-registro").addEventListener("submit", createOrganizador);
+ //metodo post
 
 
-document.addEventListener("DOMContentLoaded", getAllUsers);
+document.addEventListener("DOMContentLoaded", getAllOrganizador);
 
+document.addEventListener("DOMContentLoaded", getAllOrganizadorTable);
 
-function createUser(event) {
+function createOrganizador(event) {
   // previne o comportamento padrão do formulário, ou seja,
   //continuação:- impede que ele seja enviado e recarregue a página
   event.preventDefault();
 
   //captura os valores dos campos dos formularios
-  const name = document.getElementById("nome").value;
-  const cpf = document.getElementById("cpf").value;
+  const nome = document.getElementById("nome").value;
+  const telefone = document.getElementById("telefone").value;
   const email = document.getElementById("email").value;
   const password = document.getElementById("senha").value;
 
   //requisição HTTP para os endpoint de cadastro de usuario
-  fetch("http://10.89.240.105:5000/api/v1/user/", {
+  fetch("http://10.89.240.3:5000/api/v1/organizador/", {
     //realiza uma chamada http para o servidor (a rota definida)
     method: "POST",
     headers: {
@@ -26,7 +28,7 @@ function createUser(event) {
     },
     //Transforma os dados do formulario em uma string json para serem enviados no corpo
     //continuação:- da requisição
-    body: JSON.stringify({ name, cpf, password, email }),
+    body: JSON.stringify({ nome, telefone, password, email }),
   })
     .then((response) => {
       //Tratamento da resposta do servidor / API
@@ -59,10 +61,10 @@ function createUser(event) {
 
       console.error("Erro:", error.message);
     });
-}// fechamento createUser
+}// fechamento createOrganizador
 
-function getAllUsers(){
-  fetch("http://10.89.240.105:5000/api/v1/user/", {
+function getAllOrganizador(){
+  fetch("http://10.89.240.3:5000/api/v1/organizador/", {
     method: "GET", 
     headers: {
       "Content-Type": "application/json",
@@ -78,18 +80,63 @@ function getAllUsers(){
     })
       //tratamento dos dados
       .then((data) => { //data = dados
-        const userList = document.getElementById("user-list");
-        userList.innerHTML = "" ; //limpa a lista existente 
+        const organizadorList = document.getElementById("organizador-list");
+        organizadorList.innerHTML = "" ; //limpa a lista existente 
 
-        data.users.forEach((user)=> {
+        data.organizador.forEach((organizador)=> {
           const listItem = document.createElement("li"); //criando um elemento em lista
-          listItem.textContent = `Nome: ${user.name}, CPF: ${user.cpf}, Email: ${user.email}` //conteudo do texto dentro dessa lista
-          userList.appendChild(listItem); // insere uma coisa dentro dela
+          listItem.textContent = `Nome: ${organizador.nome}, telefone: ${organizador.telefone}, Email: ${organizador.email}, Senha: ${organizador.senha}` //conteudo do texto dentro dessa lista
+          organizadorList.appendChild(listItem); // insere uma coisa dentro dela
           //percorre o array pega o valor dele e joga pra algum lugar
         }) 
       })
       .catch((error)=> {
-        alert("Erro ao obter usuarios" + error.mensage);
+        alert("Erro ao obter organizadores" + error.message);
         console.error("Erro: ", error.message);
       })
+}
+
+function getAllOrganizadorTable(){
+  fetch("http://10.89.240.3:5000/api/v1/organizador/", {
+    method: "GET", 
+    headers: {
+      "Content-Type": "application/json",
+    }
+  })
+    .then((response) => {
+      if(response.ok){
+        return response.json();
+      }
+      return response.json().then((err) => {
+        throw new Error(err.error);
+      });
+    })
+    .then((data) => {
+      const organizadorList = document.getElementById("organizador-list-tabela");
+      organizadorList.innerHTML = "";
+
+      // Certifique-se de que a estrutura de dados está correta
+      data.organizador.forEach((organizador) => {
+        const tr = document.createElement("tr");
+
+        const tdNome = document.createElement("td");
+        tdNome.textContent = organizador.nome;
+        tr.appendChild(tdNome);
+
+        const tdtelefone = document.createElement("td");
+        tdtelefone.textContent = organizador.telefone;
+        tr.appendChild(tdtelefone);
+
+        const tdEmail = document.createElement("td");
+        tdEmail.textContent = organizador.email;
+        tr.appendChild(tdEmail);
+
+        // Corrigido para usar a variável correta
+        organizadorList.appendChild(tr);
+      });
+    })
+    .catch((error) => {
+      alert("Erro ao obter organizadores: " + error.message);
+      console.error("Erro: ", error.message);
+    });
 }
