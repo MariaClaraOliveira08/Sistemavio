@@ -13,7 +13,7 @@ module.exports = class organizadorController {
     }
   
     // Inserir dados no banco de dados
-    const query = `INSERT INTO usuario (id, telefone, password, email, name) VALUES('${id}', ${telefone}', '${password}', '${email}', '${nome}')`;
+    const query = `INSERT INTO organizador (telefone, senha, email, nome) VALUES('${telefone}', '${senha}', '${email}', '${nome}')`;
     const values = [nome, email, senha, telefone];
   
     try {
@@ -103,7 +103,7 @@ module.exports = class organizadorController {
           return res.status(404).json({error:"Organizador não encontrado"})
         }
 
-        return res.status(200).json({message:"Organizador excluido com sucesso"})
+        return res.status(200).json({message:"Organizador excluído com sucesso"})
       })
     }catch(error){
       console.error(error);
