@@ -139,38 +139,54 @@ module.exports = class eventoController {
         }
     }
 
-    // Função para listar eventos nos próximos 7 dias a partir de uma data fornecida
     static async getEventosNosProximos7Dias(req, res) {
-        const query = `SELECT * from evento`
-
-        try{
-            connect.query(query,(err, results) =>{
-                if(err){
-                    console.error(err);
-                    return res.status(500).json({error: "Erro ao buscar eventos"})
-                }
-                const dataEventoINicial = new Date(results[0].data_hora)
-
-                const now = new Date() //pega a data atual
-                const eventosIniciais = results.filter(evento => new Date(evento.data_hora)<now) //metodo de filtragem de array
-                const eventosFinais = results.filter(evento => new Date(evento.data_hora)>=now) //metodo de filtragem de array
-
-                //comparando datas
-                const dataFiltroInicial = new Date('2024-12-15').toISOString().split("T"); //tira o T da data
-                const eventosDiaInicial = results.filter(evento => new Date (evento.data_hora).toISOString().split("T")[0] === dataFiltroInicial[0]);
-
-                console.log("Eventos: ", eventosDiaInicial);
-
-                return res.status(200).json({message:'OK',eventosIniciais,eventosFinais})
-            })
+        // Recebe a data inicial como parâmetro da query string
+        const { data_inicial } = req.query;
+    
+        // Verifica se a data foi fornecida e se é válida
+        if (!data_inicial) {
+            return res.status(400).json({ error: "A data inicial é obrigatória." });
         }
-        catch(error){
-            console.error(error);
-            return res.status(500).json({error: "Erro ao buscar datas"})
+    
+        const dataInicial = new Date(data_inicial);
         
+        // Verifica se a data fornecida é válida
+        if (isNaN(dataInicial.getTime())) {
+            return res.status(400).json({ error: "Data inválida." });
         }
+    
+        // Calculando a data final (7 dias após a data inicial)
+        const dataFinal = new Date(dataInicial);
+        dataFinal.setDate(dataInicial.getDate() + 7); // Adiciona 7 dias à data inicial
+    
+        // Query para buscar eventos entre a data inicial e a data final (próximos 7 dias)
+        const query = `SELECT * FROM evento WHERE data_hora BETWEEN ? AND ?`;
+    
+        try {
+            connect.query(query, [dataInicial, dataFinal], (err, results) => {
+                if (err) {
+                    console.error(err);
+                    return res.status(500).json({ error: "Erro ao buscar eventos." });
+                }
+    
+                // Se não houver eventos encontrados, retorna uma mensagem informando
+                if (results.length === 0) {
+                    return res.status(404).json({ message: "Nenhum evento encontrado para o período especificado." });
+                }
+    
+                // Caso contrário, retorna os eventos encontrados
+                return res.status(200).json({
+                    message: "Eventos encontrados com sucesso.",
+                    eventos: results
+                });
+            });
+        } catch (error) {
+            console.error("Erro ao executar a consulta:", error);
+            return res.status(500).json({ error: "Erro interno ao buscar eventos." });
         }
     }
+    
+}
 
 
         
