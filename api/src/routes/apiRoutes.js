@@ -31,5 +31,5 @@ router.post('/ingresso', IngressoController.createIngresso);
 router.get('/ingresso', IngressoController.getAllIngresso);
 router.put('/ingresso', IngressoController.updateIngresso);
 router.delete('/ingresso/:id', IngressoController.deleteIngresso);
-router.get('/eventos/7dias', eventoController.getEventosNosProximos7Dias);
+router.get('/eventos/dia', eventoController.getEventosNosProximos7Dias);
 module.exports = router;

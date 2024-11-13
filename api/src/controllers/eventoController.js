@@ -143,11 +143,6 @@ module.exports = class eventoController {
         // Recebe a data inicial como parâmetro da query string
         const { data_inicial } = req.query;
     
-        // Verifica se a data foi fornecida e se é válida
-        if (!data_inicial) {
-            return res.status(400).json({ error: "A data inicial é obrigatória." });
-        }
-    
         const dataInicial = new Date(data_inicial);
         
         // Verifica se a data fornecida é válida
@@ -160,25 +155,18 @@ module.exports = class eventoController {
         dataFinal.setDate(dataInicial.getDate() + 7); // Adiciona 7 dias à data inicial
     
         // Query para buscar eventos entre a data inicial e a data final (próximos 7 dias)
-        const query = `SELECT * FROM evento WHERE data_hora BETWEEN ? AND ?`;
+        const query = `SELECT * FROM evento`;
     
         try {
-            connect.query(query, [dataInicial, dataFinal], (err, results) => {
+            connect.query(query, (err, results) => {
                 if (err) {
                     console.error(err);
-                    return res.status(500).json({ error: "Erro ao buscar eventos." });
-                }
-    
-                // Se não houver eventos encontrados, retorna uma mensagem informando
-                if (results.length === 0) {
-                    return res.status(404).json({ message: "Nenhum evento encontrado para o período especificado." });
+                    return res.status(500).json({ error: "Erro ao buscar as datas." });
                 }
     
                 // Caso contrário, retorna os eventos encontrados
                 return res.status(200).json({
-                    message: "Eventos encontrados com sucesso.",
-                    eventos: results
-                });
+                    message: "Eventos encontrados com sucesso.",eventos: results});
             });
         } catch (error) {
             console.error("Erro ao executar a consulta:", error);
