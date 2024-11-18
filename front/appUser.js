@@ -1,9 +1,9 @@
 //Chamada da função "createUser" para associação ao evento de envio de formulário
-document.getElementById("formulario-registro").addEventListener("submit", createOrganizador);
- //metodo post
+// document.getElementById("formulario-registro").addEventListener("submit", createOrganizador);
+//  //metodo post
 
 
-document.addEventListener("DOMContentLoaded", getAllOrganizador);
+// document.addEventListener("DOMContentLoaded", getAllOrganizador);
 
 document.addEventListener("DOMContentLoaded", getAllOrganizadorTable);
 
@@ -19,7 +19,7 @@ function createOrganizador(event) {
   const password = document.getElementById("senha").value;
 
   //requisição HTTP para os endpoint de cadastro de usuario
-  fetch("http://10.89.240.3:5000/api/v1/organizador/", {
+  fetch("http://10.89.240.99:5000/api/v1/organizador/", {
     //realiza uma chamada http para o servidor (a rota definida)
     method: "POST",
     headers: {
@@ -64,7 +64,7 @@ function createOrganizador(event) {
 }// fechamento createOrganizador
 
 function getAllOrganizador(){
-  fetch("http://10.89.240.3:5000/api/v1/organizador/", {
+  fetch("http://10.89.240.99:5000/api/v1/organizador/", {
     method: "GET", 
     headers: {
       "Content-Type": "application/json",
@@ -83,7 +83,7 @@ function getAllOrganizador(){
         const organizadorList = document.getElementById("organizador-list");
         organizadorList.innerHTML = "" ; //limpa a lista existente 
 
-        data.organizador.forEach((organizador)=> {
+        data.organizadores.forEach((organizador)=> {
           const listItem = document.createElement("li"); //criando um elemento em lista
           listItem.textContent = `Nome: ${organizador.nome}, telefone: ${organizador.telefone}, Email: ${organizador.email}, Senha: ${organizador.senha}` //conteudo do texto dentro dessa lista
           organizadorList.appendChild(listItem); // insere uma coisa dentro dela
@@ -97,7 +97,7 @@ function getAllOrganizador(){
 }
 
 function getAllOrganizadorTable(){
-  fetch("http://10.89.240.3:5000/api/v1/organizador/", {
+  fetch("http://10.89.240.99:5000/api/v1/organizador/", {
     method: "GET", 
     headers: {
       "Content-Type": "application/json",
@@ -116,7 +116,7 @@ function getAllOrganizadorTable(){
       organizadorList.innerHTML = "";
 
       // Certifique-se de que a estrutura de dados está correta
-      data.organizador.forEach((organizador) => {
+      data.organizadores.forEach((organizador) => {
         const tr = document.createElement("tr");
 
         const tdNome = document.createElement("td");
