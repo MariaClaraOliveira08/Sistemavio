@@ -46,12 +46,8 @@
           <input type="text" id="nome" name="nome" required />
 
         <!--Entrada do nome-->
-        <label for="nome">telefone</label>
-        <input type="text" id="nome" name="nome" required />
-
-          <!--Entrada do telefone-->
-          <label for="data">data_Nascimento</label>
-          <input type="text" id="data_Nascimento" name="data_Nascimento" required />
+        <label for="nome">CPF</label>
+        <input type="text" id="nome" name="text" required />
 
            <!--Entrada do EMAIL-->
            <label for="email">E-mail</label>
@@ -60,6 +56,10 @@
             <!--Entrada do SENHA-->
             <label for="senha">Senha</label>
             <input type="password" id="senha" name="senha" required />
+
+            <!--Entrada da data de nascimento-->
+          <label for="data">Data de Nascimento</label>
+          <input type="date" id="data" name="data" required />
 
              <!--Entrada do BOTÃO para enviar o formulário-->
            <input type="submit" value="cadastrar"/>
@@ -81,6 +81,7 @@
             <th>Nome</th>
             <th>Telefone</th>
             <th>E-mail</th>
+            <th>Data de Nascimento</th>
           </thead>
 
           <tbody id="organizador-list-tabela">

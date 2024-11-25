@@ -14,12 +14,13 @@ function createOrganizador(event) {
 
   //captura os valores dos campos dos formularios
   const nome = document.getElementById("nome").value;
-  const telefone = document.getElementById("telefone").value;
+  const cpf = document.getElementById("telefone").value;
   const email = document.getElementById("email").value;
   const password = document.getElementById("senha").value;
+  const data_nascimento = document.getElementById("data").value;
 
   //requisição HTTP para os endpoint de cadastro de usuario
-  fetch("http://10.89.240.99:5000/api/v1/organizador/", {
+  fetch("http://10.89.240.14:5000/api/v1/organizador/", {
     //realiza uma chamada http para o servidor (a rota definida)
     method: "POST",
     headers: {
@@ -28,7 +29,7 @@ function createOrganizador(event) {
     },
     //Transforma os dados do formulario em uma string json para serem enviados no corpo
     //continuação:- da requisição
-    body: JSON.stringify({ nome, telefone, password, email }),
+    body: JSON.stringify({ nome, cpf, password, email, data_nascimento }),
   })
     .then((response) => {
       //Tratamento da resposta do servidor / API
@@ -64,7 +65,7 @@ function createOrganizador(event) {
 }// fechamento createOrganizador
 
 function getAllOrganizador(){
-  fetch("http://10.89.240.99:5000/api/v1/organizador/", {
+  fetch("http://10.89.240.14:5000/api/v1/organizador/", {
     method: "GET", 
     headers: {
       "Content-Type": "application/json",
@@ -83,9 +84,9 @@ function getAllOrganizador(){
         const organizadorList = document.getElementById("organizador-list");
         organizadorList.innerHTML = "" ; //limpa a lista existente 
 
-        data.organizadores.forEach((organizador)=> {
+        data.organizadores.forEach((organizador)=> { // for each passa por toda resposta
           const listItem = document.createElement("li"); //criando um elemento em lista
-          listItem.textContent = `Nome: ${organizador.nome}, telefone: ${organizador.telefone}, Email: ${organizador.email}, Senha: ${organizador.senha}` //conteudo do texto dentro dessa lista
+          listItem.textContent = `Nome: ${organizador.nome}, cpf: ${organizador.cpf}, Email: ${organizador.email}, Data de Nascimento: ${user.data_nascimento}`; //conteudo do texto dentro dessa lista
           organizadorList.appendChild(listItem); // insere uma coisa dentro dela
           //percorre o array pega o valor dele e joga pra algum lugar
         }) 
@@ -97,7 +98,7 @@ function getAllOrganizador(){
 }
 
 function getAllOrganizadorTable(){
-  fetch("http://10.89.240.99:5000/api/v1/organizador/", {
+  fetch("http://10.89.240.14:5000/api/v1/organizador/", {
     method: "GET", 
     headers: {
       "Content-Type": "application/json",
@@ -123,13 +124,17 @@ function getAllOrganizadorTable(){
         tdNome.textContent = organizador.nome;
         tr.appendChild(tdNome);
 
-        const tdtelefone = document.createElement("td");
-        tdtelefone.textContent = organizador.telefone;
-        tr.appendChild(tdtelefone);
+        const tdcpf = document.createElement("td");
+        tdcpf.textContent = organizador.cpf;
+        tr.appendChild(tdcpf);
 
         const tdEmail = document.createElement("td");
         tdEmail.textContent = organizador.email;
         tr.appendChild(tdEmail);
+
+        const tdData_nascimento = document.createElement("td");
+        tdData_nascimento.textContent = usuario.data_nascimento;
+        tr.appendChild(tdData_nascimento);
 
         // Corrigido para usar a variável correta
         organizadorList.appendChild(tr);
